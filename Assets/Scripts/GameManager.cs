@@ -6,8 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //Keeps track of instances
     public static GameManager instance;
+    public static int gameManagerCount = 0;
 
+    //Variables in scene, not Player Data
     public string playerName;
     public int health;
     public int sanity;
@@ -15,16 +18,23 @@ public class GameManager : MonoBehaviour
     public int score;
     public int mana;
 
+    //Singleton Pattern
     private void Awake()
     {
         if (instance == null)
         {
             DontDestroyOnLoad(gameObject);
             instance = this;
+            gameManagerCount++;
         }
-        if (instance != this) Destroy(gameObject);
+        if (instance != this)
+        {
+            Destroy(gameObject);
+            gameManagerCount++;
+        }
     }
 
+    //Checks player input to change scenes
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SceneManager.LoadScene(0); // press 1
@@ -33,11 +43,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4)) SceneManager.LoadScene(3); // press 4
     }
 
-    public void LoadScene(int sceneIndex)
-    {
-        SceneManager.LoadScene(sceneIndex);
-    }
-
+    //Shows changable variables on screen
     private void OnGUI()
     {
         GUI.Label(new Rect(10, 10, 100, 30), $"Name: {playerName}");
@@ -46,8 +52,10 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(10, 100, 100, 30), $"EXP: {experiencePoints}");
         GUI.Label(new Rect(10, 140, 100, 30), $"Score: {score}");
         GUI.Label(new Rect(10, 180, 100, 30), $"Mana: {mana}");
+        GUI.Label(new Rect(10, 220, 100, 30), $"Managers: {gameManagerCount}");
     }
 
+    //Use to save Player Data
     public void Save()
     {
         BinaryFormatter bf = new BinaryFormatter();
@@ -65,6 +73,7 @@ public class GameManager : MonoBehaviour
         file.Close();
     }
 
+    //Use to load Player Data
     public void Load()
     {
         if(File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
@@ -84,6 +93,7 @@ public class GameManager : MonoBehaviour
     }
 }
 
+//Used to save Player Data across Game Sessions
 [Serializable]
 class PlayerData
 {
