@@ -635,9 +635,9 @@ MonoBehaviour:
   playerName: Zander
   health: 100
   sanity: 70
-  experiencePoints: 25
-  score: 0
-  mana: 50
+  experiencePoints: 50
+  score: 25
+  mana: 12
 --- !u!4 &1530064962
 Transform:
   m_ObjectHideFlags: 0
